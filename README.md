@@ -15,5 +15,5 @@ Este es un proyecto de una calculadora simple desarrollada en Java utilizando la
 Para clonar este repositorio en tu máquina local, utiliza el siguiente comando:
 
 ```bash
-git clone [<URL_del_repositorio>](https://github.com/pLorente005/Calculadora)
+git clone (https://github.com/pLorente005/Calculadora)
 
