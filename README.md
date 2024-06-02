@@ -1,4 +1,4 @@
-alculadora Java Swing
+Calculadora Java Swing
 Este es un proyecto de una calculadora simple desarrollada en Java utilizando la biblioteca Swing para la interfaz de usuario.
 
 Funcionalidades
