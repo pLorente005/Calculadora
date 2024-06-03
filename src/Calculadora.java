@@ -70,6 +70,4 @@ public class Calculadora extends JFrame implements ActionListener {
         String textoPantalla = pantalla.getText();
         pantalla.setText(logica.manejarComando(comando, textoPantalla));
     }
-
-
 }

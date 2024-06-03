@@ -38,7 +38,7 @@ public class CalculadoraLogica {
         }
     }
 
-    public void pushOperador(String operador, String textoPantalla) {
+    public String pushOperador(String operador, String textoPantalla) {
         double operando = Double.parseDouble(textoPantalla);
         operandos.push(operando);
         while (!operadores.isEmpty() && precedencia(operador) <= precedencia(operadores.peek())) {
@@ -49,6 +49,7 @@ public class CalculadoraLogica {
         }
         operadores.push(operador);
         reiniciarPantalla = true;
+        return String.join(" ", textoPantalla, operador);
     }
 
     public String calcularResultado(String textoPantalla) {
@@ -80,52 +81,72 @@ public class CalculadoraLogica {
     }
 
     private double evaluar(double a, double b, String operador) {
-        switch (operador) {
-            case "+":
-                return a + b;
-            case "-":
-                return a - b;
-            case "x":
-                return a * b;
-            case "/":
-                return a / b;
-            default:
-                throw new IllegalArgumentException("Operador desconocido: " + operador);
+        if (operador.equals("+")) {
+            return a + b;
+        } else if (operador.equals("-")) {
+            return a - b;
+        } else if (operador.equals("x")) {
+            return a * b;
+        } else if (operador.equals("/")) {
+            if (b == 0) {
+                return Double.NaN;
+            }
+            return a / b;
+        } else {
+            return Double.NaN;
         }
     }
+
 
     public boolean debeReiniciarPantalla() {
         return reiniciarPantalla;
     }
 
     public String manejarComando(String comando, String textoPantalla) {
-        if ("C".equals(comando)) {
-            reiniciar();
-            return "0";
-        } else if ("<".equals(comando)) {
-            return borrarUltimoCaracter(textoPantalla);
-        } else if ("+/-".equals(comando)) {
-            return cambiarSigno(textoPantalla);
-        } else if ("+".equals(comando) || "-".equals(comando) || "x".equals(comando) || "/".equals(comando)) {
-            pushOperador(comando, textoPantalla);
-            return textoPantalla;
-        } else if ("=".equals(comando)) {
-            return calcularResultado(textoPantalla);
-        } else {
-            if (debeReiniciarPantalla()) {
-                setReiniciarPantalla(false);
-                return comando;
+        try {
+            if ("C".equals(comando)) {
+                reiniciar();
+                return "0";
+            } else if ("<".equals(comando)) {
+                return borrarUltimoCaracter(textoPantalla);
+            } else if ("+/-".equals(comando)) {
+                return cambiarSigno(textoPantalla);
+            } else if ("+".equals(comando) || "-".equals(comando) || "x".equals(comando) || "/".equals(comando)) {
+                return pushOperador(comando, textoPantalla);
+            } else if ("=".equals(comando)) {
+                return calcularResultado(textoPantalla);
             } else {
-                if (textoPantalla.length() < 9) { // Limitar a 9 caracteres
-                    if ("0".equals(textoPantalla)) {
-                        return comando;
+                if (debeReiniciarPantalla()) {
+                    setReiniciarPantalla(false);
+                    if (comando.equals(".")) {
+                        return "0.";
                     } else {
-                        return textoPantalla + comando;
+                        return comando;
                     }
                 } else {
-                    return textoPantalla;
+                    if (textoPantalla.length() < 16) {
+                        if ("0".equals(textoPantalla)) {
+                            if (comando.equals(".")) {
+                                return textoPantalla + comando;
+                            } else {
+                                return comando;
+                            }
+                        } else {
+                            if (comando.equals(".") && textoPantalla.contains(".")) {
+                                return textoPantalla;
+                            } else {
+                                return textoPantalla + comando;
+                            }
+                        }
+                    } else {
+                        return textoPantalla;
+                    }
                 }
             }
+        } catch (NumberFormatException e) {
+            return "Error: Número invalido";
+        } catch (IllegalArgumentException e) {
+            return "Error: Operador desconocido";
         }
     }
 }
