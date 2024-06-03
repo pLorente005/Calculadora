@@ -6,9 +6,7 @@ import java.awt.event.ActionListener;
 public class Calculadora extends JFrame implements ActionListener {
     private JPanel panel;
     private JTextField pantalla;
-    private String operadorActual;
-    private double operando1;
-    private boolean reiniciarPantalla;
+    private CalculadoraLogica logica;
 
     public Calculadora() {
         setTitle("Calculadora");
@@ -18,6 +16,7 @@ public class Calculadora extends JFrame implements ActionListener {
 
         getContentPane().setBackground(new Color(211, 211, 211));
 
+        logica = new CalculadoraLogica();
         iniciarUI();
     }
 
@@ -28,7 +27,7 @@ public class Calculadora extends JFrame implements ActionListener {
 
         pantalla = new JTextField();
         pantalla.setHorizontalAlignment(JTextField.RIGHT);
-        pantalla.setPreferredSize(new Dimension(200, 50));
+        pantalla.setPreferredSize(new Dimension(200, 75));
         pantalla.setFont(new Font("Arial", Font.PLAIN, 24));
         pantalla.setEditable(false);
         pantalla.setText("0");
@@ -68,60 +67,9 @@ public class Calculadora extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String comando = e.getActionCommand();
-        manejarClickBoton(comando);
+        String textoPantalla = pantalla.getText();
+        pantalla.setText(logica.manejarComando(comando, textoPantalla));
     }
 
-    private void manejarClickBoton(String comando) {
-        if ("C".equals(comando)) {
-            pantalla.setText("0");
-            operando1 = 0;
-            operadorActual = "";
-            reiniciarPantalla = false;
-        } else if ("<".equals(comando)) {
-            String texto = pantalla.getText();
-            if (texto.length() > 0) {
-                pantalla.setText(texto.substring(0, texto.length() - 1));
-            }
-            if (pantalla.getText().length() == 0) {
-                pantalla.setText("0");
-            }
-        } else if ("+/-".equals(comando)) {
-            if (pantalla.getText().startsWith("-")) {
-                pantalla.setText(pantalla.getText().substring(1));
-            } else {
-                pantalla.setText("-" + pantalla.getText());
-            }
-        } else if ("+".equals(comando) || "-".equals(comando) || "x".equals(comando) || "/".equals(comando)) {
-            operando1 = Double.parseDouble(pantalla.getText());
-            operadorActual = comando;
-            reiniciarPantalla = true;
-        } else if ("=".equals(comando)) {
-            double operando2 = Double.parseDouble(pantalla.getText());
-            double resultado = 0;
-            if ("+".equals(operadorActual)) {
-                resultado = operando1 + operando2;
-            } else if ("-".equals(operadorActual)) {
-                resultado = operando1 - operando2;
-            } else if ("x".equals(operadorActual)) {
-                resultado = operando1 * operando2;
-            } else if ("/".equals(operadorActual)) {
-                resultado = operando1 / operando2;
-            }
-            pantalla.setText(String.valueOf(resultado));
-            operadorActual = "";
-            reiniciarPantalla = true;
-        } else {
-            if (reiniciarPantalla) {
-                pantalla.setText(comando);
-                reiniciarPantalla = false;
-            } else {
-                if (pantalla.getText().equals("0")) {
-                    pantalla.setText(comando);
-                } else {
-                    pantalla.setText(pantalla.getText() + comando);
-                }
-            }
-        }
-    }
 
 }
