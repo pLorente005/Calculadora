@@ -4,6 +4,7 @@ public class CalculadoraLogica {
     private Stack<Double> operandos;
     private Stack<String> operadores;
     private boolean reiniciarPantalla;
+    private boolean divisionPorCero;
 
     public CalculadoraLogica() {
         reiniciar();
@@ -17,6 +18,7 @@ public class CalculadoraLogica {
         operandos = new Stack<>();
         operadores = new Stack<>();
         reiniciarPantalla = false;
+        divisionPorCero = false;
     }
 
     public String borrarUltimoCaracter(String texto) {
@@ -64,7 +66,11 @@ public class CalculadoraLogica {
         }
 
         reiniciarPantalla = true;
-        return String.valueOf(operandos.pop());
+        if (divisionPorCero) {
+            return "Error";
+        } else {
+            return String.valueOf(operandos.pop());
+        }
     }
 
     private int precedencia(String operador) {
@@ -89,6 +95,7 @@ public class CalculadoraLogica {
             return a * b;
         } else if (operador.equals("/")) {
             if (b == 0) {
+                divisionPorCero = true;
                 return Double.NaN;
             }
             return a / b;
@@ -96,7 +103,6 @@ public class CalculadoraLogica {
             return Double.NaN;
         }
     }
-
 
     public boolean debeReiniciarPantalla() {
         return reiniciarPantalla;

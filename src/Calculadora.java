@@ -14,6 +14,7 @@ public class Calculadora extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        setIconImage(new ImageIcon("C:\\Users\\paulo\\IdeaProjects\\Calculador\\src\\calculadora (2).png").getImage());
         getContentPane().setBackground(new Color(211, 211, 211));
 
         logica = new CalculadoraLogica();
@@ -44,7 +45,9 @@ public class Calculadora extends JFrame implements ActionListener {
         JPanel panelBotones = new JPanel(new GridLayout(5, 4, 5, 5));
         panel.add(panelBotones, BorderLayout.CENTER);
 
-        for (String boton : botones) {
+
+        for (int i = 0; i < botones.length; i++) {
+            String boton = botones[i];
             crearBoton(panelBotones, boton);
         }
     }
